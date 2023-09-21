@@ -72,6 +72,7 @@ set(EXECUTABLE ${PROJECT_NAME}.out)
 add_executable(${EXECUTABLE} ${STM32CUBEMX_GENERATED_FILES}
         source/application.c
         source/uart/uart.c
+        source/ring_buffer/ring_buffer.c
 )
 
 target_compile_definitions(${EXECUTABLE} PRIVATE
@@ -89,6 +90,7 @@ target_include_directories(${EXECUTABLE} SYSTEM PRIVATE # adding system will als
 target_include_directories(${EXECUTABLE} PRIVATE
         source
         source/uart
+        source/ring_buffer
 )
 
 target_compile_options(${EXECUTABLE} PRIVATE

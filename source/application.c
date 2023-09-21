@@ -8,17 +8,23 @@
 #include "main.h"
 
 #define RX_CHAR_COUNT 1
-
 uint8_t buffer[RX_CHAR_COUNT];
 
-uint8_t circular_buffer[12];
-uint8_t data_ptr = 0;
+#define RING_BUFFER_LENGTH 128 // make it 128 later
+
+ring_buffer_t rb = {0};
+uint8_t ring_buf[RING_BUFFER_LENGTH] = {0};
+uint8_t ring_buf_rx[RING_BUFFER_LENGTH] = {0};
+
+uint8_t local_counter = 0;
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     // Not Implemented
 }
 
 void setup(void) {
+
+    ring_buffer_setup(&rb,ring_buf,RING_BUFFER_LENGTH);
     uart_setup();
     uart_write("UART & Ring Buffer Demo\r\n",25);
 }
@@ -30,18 +36,23 @@ void loop(void) {
     uart_read(buffer,RX_CHAR_COUNT);
 
     if(uart_data_available()) {
+        ring_buffer_write(&rb, buffer);
         uart_write(buffer,RX_CHAR_COUNT);
-        memcpy(circular_buffer+data_ptr,buffer,1);
-        data_ptr++;
+        local_counter++;
     }
 
-    if(data_ptr == 11) {
+    if(local_counter == RING_BUFFER_LENGTH ) {
+        for (int i = 0; i < RING_BUFFER_LENGTH; i++) {
+            uint8_t byte;
+            ring_buffer_read(&rb,&byte);
+            ring_buf_rx[i] = byte;
+        }
         uart_write("\r\n",2);
-        uart_write("circular_buffer:\r\n",18);
-        uart_write(circular_buffer,12);
+        uart_write("ring buffer contents:\r\n",23);
+        uart_write(ring_buf_rx,RING_BUFFER_LENGTH);
         uart_write("\r\n",2);
 
-        data_ptr = 0;
+        local_counter = 0;
     }
 
     HAL_Delay(100);

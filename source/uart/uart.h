@@ -10,8 +10,6 @@
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_ll_usart.h"
 
-#define RING_BUFFER_SIZE (128) // For maximum of ~10 ms latency
-
 void uart_setup(void);
 void uart_write(uint8_t* data, const uint32_t length);
 void uart_write_byte(uint8_t data);

@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include "uart/uart.h"
+#include "ring_buffer/ring_buffer.h"
 
 void setup(void );
 void loop(void );

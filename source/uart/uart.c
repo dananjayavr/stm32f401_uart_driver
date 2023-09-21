@@ -4,7 +4,7 @@
 
 #include "uart.h"
 
-#define RX_COUNT 4
+#define RX_COUNT 1
 
 extern UART_HandleTypeDef huart2;
 
